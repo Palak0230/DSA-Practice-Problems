@@ -1,0 +1,32 @@
+class Solution {
+    private String digits;
+    private int k;
+    private Long[][] memo;
+    public long goodIntegers(long l, long r, int k) {
+        this.k=k;
+        return countUpTo(r)-countUpTo(l-1);
+    }
+    private long countUpTo(long x){
+        if(x<0) return 0;
+        digits=Long.toString(x);
+        memo=new Long[digits.length()][11];
+        return dfs(0,10,true,false);
+    }
+    private long dfs(int pos, int prevDigit,boolean tight, boolean started){
+        if(pos==digits.length()) return 1;
+        if(!tight &&started && memo[pos][prevDigit]!= null){
+            return memo[pos][prevDigit];
+        }
+        int limit=tight?digits.charAt(pos)-'0':9;
+        long total=0;
+        for(int d=0;d<=limit;d++){
+            if(started&&Math.abs(d - prevDigit)>k) continue;
+            boolean nowStarted = started || d!=0;
+            total+= dfs(pos+1, nowStarted? d: prevDigit, tight&& d==limit, nowStarted);
+        }
+        if(!tight&&started){
+            memo[pos][prevDigit]=total;
+        }
+        return total;
+    }        
+}©leetcode
