@@ -1,0 +1,23 @@
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> subset = new ArrayList<>();
+        func(0,target, candidates, new ArrayList<>(), subset);
+        return subset;
+
+    }
+    void func(int i, int target, int[] candidates, List<Integer> list, List<List<Integer>> subset){
+        int len = candidates.length;
+        if(i == len){
+            if(target == 0){
+                subset.add(new ArrayList(list));
+            }
+            return;
+        }
+        if(candidates[i]<= target){
+            list.add(candidates[i]);
+            func(i,target-candidates[i], candidates, list, subset);
+            list.remove(list.size()-1);
+        }
+        func(i+1, target, candidates, list, subset);
+    }
+}
