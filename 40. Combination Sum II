@@ -1,0 +1,27 @@
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> subset= new ArrayList<>();
+        func(0, target, candidates, new ArrayList<>(), subset);
+        return subset;
+
+    }
+    void func(int i, int target, int[] candidates,List<Integer> list, List<List<Integer>> subset){
+        int len = candidates.length;
+        if(target==0){
+            subset.add(new ArrayList(list));
+            return;
+        }
+        for(int j=i; j<len; j++){
+            if(j>i && candidates[j]==candidates[j-1]){
+                continue;
+            }
+            if(candidates[j]>target){
+                break;
+            }
+            list.add(candidates[j]);
+            func(j+1,target-candidates[j], candidates, list, subset);
+            list.remove(list.size()-1);
+        }
+    }
+}
