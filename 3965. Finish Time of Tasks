@@ -1,0 +1,36 @@
+class Solution {
+    public long finishTime(int n, int[][] edges, int[] baseTime) {
+        List<List<Integer>> children= new ArrayList<>();
+        for(int i=0; i<n;i++) children.add(new ArrayList<>());
+        for(int[]e: edges) children.get(e[0]).add(e[1]);
+        long[] finish= new long[n];
+        int[] order=new int[n];
+        int idx=0;
+        Deque<Integer> stack=new ArrayDeque<>();
+        stack.push(0);
+        while(!stack.isEmpty()){
+            int node=stack.pop();
+            order[idx++]=node;
+            for(int child:children.get(node)){
+                stack.push(child);
+            }
+        }
+        for(int i=n-1;i>=0;i--){
+            int node=order[i];
+            List<Integer> kids=children.get(node);
+            if(kids.isEmpty()){
+                finish[node]=baseTime[node];
+                continue;
+            }
+            long earliest=Long.MAX_VALUE;
+            long latest=Long.MIN_VALUE;
+            for(int c: kids){
+                earliest= Math.min(earliest, finish[c]);
+                latest=Math.max(latest, finish[c]);
+            }
+            long ownDuration=(latest-earliest)+baseTime[node];
+            finish[node]=latest+ownDuration;
+        }
+    return finish[0];
+    }
+}
